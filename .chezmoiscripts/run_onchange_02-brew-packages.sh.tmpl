@@ -17,8 +17,6 @@ else
 fi
 
 echo "▶ Running brew bundle (machine: {{ .machine }})..."
-
-# brew bundle --no-lock --file=/dev/stdin <<'BREWFILE'
 brew bundle --file=/dev/stdin <<'BREWFILE'
 
 # ── taps ──────────────────────────────────────────────────────────────────────
@@ -158,7 +156,6 @@ BREWFILE
 # ── work-only packages ────────────────────────────────────────────────────────
 {{ if eq .machine "work" -}}
 echo "▶ Installing work-only packages..."
-# brew bundle --no-lock --file=/dev/stdin <<'WORK_BREWFILE'
 brew bundle --file=/dev/stdin <<'WORK_BREWFILE'
 
 
@@ -193,7 +190,6 @@ WORK_BREWFILE
 # ── personal-only packages ────────────────────────────────────────────────────
 {{ if eq .machine "personal" -}}
 echo "▶ Installing personal-only packages..."
-# brew bundle --no-lock --file=/dev/stdin <<'PERSONAL_BREWFILE'
 brew bundle --file=/dev/stdin <<'PERSONAL_BREWFILE'
 
 cask "anaconda"
@@ -206,7 +202,6 @@ PERSONAL_BREWFILE
 # NOTE: You must be signed into the Mac App Store before this section runs.
 # If mas fails, sign in manually and re-run: chezmoi apply
 echo "▶ Installing Mac App Store apps (requires App Store sign-in)..."
-# brew bundle --no-lock --file=/dev/stdin <<'MAS_BREWFILE'
 brew bundle --file=/dev/stdin <<'MAS_BREWFILE'
 
 mas "1Password for Safari", id: 1569813296
