@@ -10,7 +10,8 @@
 # =============================================================================
 set -euo pipefail
 
-CHEZMOI_REPO="git@github.com:praivio/macos-config.git"
+CHEZMOI_REPO="https://github.com/praivio/macos-config.git"
+# CHEZMOI_REPO="git@github.com:praivio/macos-config.git"
 HOMEBREW_PREFIX="/opt/homebrew"   # Apple Silicon default; adjusted below for Intel
 
 # ── helpers ──────────────────────────────────────────────────────────────────
