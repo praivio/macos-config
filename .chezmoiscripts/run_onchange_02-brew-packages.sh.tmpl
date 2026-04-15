@@ -206,7 +206,8 @@ PERSONAL_BREWFILE
 # NOTE: You must be signed into the Mac App Store before this section runs.
 # If mas fails, sign in manually and re-run: chezmoi apply
 echo "▶ Installing Mac App Store apps (requires App Store sign-in)..."
-brew bundle --no-lock --file=/dev/stdin <<'MAS_BREWFILE'
+# brew bundle --no-lock --file=/dev/stdin <<'MAS_BREWFILE'
+brew bundle --file=/dev/stdin <<'MAS_BREWFILE'
 
 mas "1Password for Safari", id: 1569813296
 mas "Bear",                 id: 1091189122
