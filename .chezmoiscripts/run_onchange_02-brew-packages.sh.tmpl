@@ -18,7 +18,8 @@ fi
 
 echo "▶ Running brew bundle (machine: {{ .machine }})..."
 
-brew bundle --no-lock --file=/dev/stdin <<'BREWFILE'
+# brew bundle --no-lock --file=/dev/stdin <<'BREWFILE'
+brew bundle --file=/dev/stdin <<'BREWFILE'
 
 # ── taps ──────────────────────────────────────────────────────────────────────
 tap "codecrafters-io/tap"
