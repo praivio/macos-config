@@ -158,7 +158,9 @@ BREWFILE
 # ── work-only packages ────────────────────────────────────────────────────────
 {{ if eq .machine "work" -}}
 echo "▶ Installing work-only packages..."
-brew bundle --no-lock --file=/dev/stdin <<'WORK_BREWFILE'
+# brew bundle --no-lock --file=/dev/stdin <<'WORK_BREWFILE'
+brew bundle --file=/dev/stdin <<'WORK_BREWFILE'
+
 
 # Work CLI tools
 brew "ssh-copy-id"
@@ -191,7 +193,8 @@ WORK_BREWFILE
 # ── personal-only packages ────────────────────────────────────────────────────
 {{ if eq .machine "personal" -}}
 echo "▶ Installing personal-only packages..."
-brew bundle --no-lock --file=/dev/stdin <<'PERSONAL_BREWFILE'
+# brew bundle --no-lock --file=/dev/stdin <<'PERSONAL_BREWFILE'
+brew bundle --file=/dev/stdin <<'PERSONAL_BREWFILE'
 
 cask "anaconda"
 cask "app-fair"
