@@ -1,0 +1,60 @@
+# ~/.gitconfig — managed by chezmoi
+# Name and email are set from chezmoi template variables (prompted on first init).
+
+[user]
+  name  = {{ .name }}
+  email = {{ .email }}
+
+[core]
+  editor     = emacs -nw
+  autocrlf   = input
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+
+[init]
+  defaultBranch = main
+
+[pull]
+  rebase = false
+
+[push]
+  default = current
+
+[fetch]
+  prune = true
+
+[merge]
+  conflictstyle = diff3
+
+[diff]
+  algorithm = histogram
+
+[rebase]
+  autoStash = true
+
+[alias]
+  # log
+  lg    = log --oneline --graph --decorate --all
+  last  = log -1 HEAD --stat
+
+  # convenience
+  st    = status -sb
+  co    = checkout
+  br    = branch
+  unstage = reset HEAD --
+
+  # undo last commit but keep changes staged
+  undo  = reset --soft HEAD~1
+
+  # list branches sorted by last commit date
+  brs   = branch --sort=-committerdate --format='%(committerdate:short) %(refname:short)'
+
+[color]
+  ui = auto
+
+[credential]
+  helper = osxkeychain
+
+{{ if eq .machine "work" }}
+[includeIf "gitdir:~/work/"]
+  path = ~/.gitconfig.work
+{{ end }}

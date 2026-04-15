@@ -1,0 +1,147 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# run_once_after_03-macos-defaults.sh.tmpl
+#
+# Sets macOS system preferences via `defaults write`.
+# Runs ONCE per machine. To re-run after making changes here:
+#   chezmoi state delete-bucket --bucket=scriptState
+#   chezmoi apply
+#
+# Reference: https://macos-defaults.com
+set -euo pipefail
+
+echo "▶ Applying macOS defaults..."
+
+# ── general UI ────────────────────────────────────────────────────────────────
+
+# Use dark mode
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+
+# Always show scrollbars
+defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
+
+# Expand save panel by default
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Expand print panel by default
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+# Disable the "Are you sure you want to open this application?" dialog
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+# ── keyboard ──────────────────────────────────────────────────────────────────
+
+# Fast key repeat (lower = faster; min is 1)
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+# Disable smart quotes and dashes (annoying in code)
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# ── trackpad ──────────────────────────────────────────────────────────────────
+
+# Enable tap-to-click
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+# Natural scrolling (macOS default; set false to disable)
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
+
+# ── finder ────────────────────────────────────────────────────────────────────
+
+# Show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Show path bar and status bar
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+
+# Show hidden files
+defaults write com.apple.finder AppleShowAllFiles -bool true
+
+# Search the current folder by default
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+# Disable the warning when changing a file extension
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+# Use list view by default
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
+# Keep folders on top when sorting
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+
+# Avoid creating .DS_Store files on network or USB volumes
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# ── dock ──────────────────────────────────────────────────────────────────────
+
+# Auto-hide the Dock
+defaults write com.apple.dock autohide -bool true
+
+# Reduce auto-hide delay
+defaults write com.apple.dock autohide-delay -float 0.1
+defaults write com.apple.dock autohide-time-modifier -float 0.5
+
+# Don't show recent apps
+defaults write com.apple.dock show-recents -bool false
+
+# Icon size
+defaults write com.apple.dock tilesize -int 48
+
+# Minimise windows using the scale effect (faster)
+defaults write com.apple.dock mineffect -string "scale"
+
+# ── screenshots ───────────────────────────────────────────────────────────────
+
+# Save screenshots to ~/Desktop/Screenshots
+SCREENSHOTS_DIR="${HOME}/Desktop/Screenshots"
+mkdir -p "${SCREENSHOTS_DIR}"
+defaults write com.apple.screencapture location -string "${SCREENSHOTS_DIR}"
+
+# Save as PNG
+defaults write com.apple.screencapture type -string "png"
+
+# Disable shadow in screenshots
+defaults write com.apple.screencapture disable-shadow -bool true
+
+# ── safari ────────────────────────────────────────────────────────────────────
+
+# Show the full URL in the address bar
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+
+# Enable developer menu and web inspector
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+
+# ── text edit ─────────────────────────────────────────────────────────────────
+
+# Use plain text by default
+defaults write com.apple.TextEdit RichText -int 0
+
+# Open and save files as UTF-8
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+# ── activity monitor ──────────────────────────────────────────────────────────
+
+# Show all processes
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
+
+# Sort by CPU usage
+defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+defaults write com.apple.ActivityMonitor SortDirection -int 0
+
+# ── restart affected apps ─────────────────────────────────────────────────────
+
+echo "▶ Restarting affected apps to apply settings..."
+for app in "Finder" "Dock" "Safari" "SystemUIServer" "cfprefsd"; do
+  killall "${app}" &>/dev/null || true
+done
+
+echo "✔ macOS defaults applied. A full logout/restart is recommended."
+{{ end -}}

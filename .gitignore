@@ -1,0 +1,4 @@
+# Repo-level .gitignore
+*.lock
+Brewfile.lock
+.DS_Store
