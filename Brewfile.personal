@@ -1,0 +1,55 @@
+# Brewfile.personal — installed on personal machines only
+# Managed by macos-config. Run via bootstrap.sh or:
+#   brew bundle --file=Brewfile.personal
+
+# ── taps ──────────────────────────────────────────────────────────────────────
+tap "codecrafters-io/tap"
+
+# ── languages: python ─────────────────────────────────────────────────────────
+brew "pyenv"
+brew "python@3.12"
+brew "pipx"
+
+# ── languages: node ───────────────────────────────────────────────────────────
+brew "node"
+brew "nvm"
+brew "yarn"
+brew "yarn-completion"
+
+# ── languages: go ─────────────────────────────────────────────────────────────
+brew "go"
+
+# ── languages: java ───────────────────────────────────────────────────────────
+brew "openjdk"
+brew "gradle"
+brew "maven"
+
+# ── editors ───────────────────────────────────────────────────────────────────
+brew "emacs"
+
+# ── learning & practice ───────────────────────────────────────────────────────
+brew "exercism"
+brew "codecrafters-io/tap/codecrafters"
+
+# ── casks: creativity & media ─────────────────────────────────────────────────
+cask "calibre"
+cask "drawio"
+cask "gimp"
+cask "imageoptim"
+cask "musescore"
+cask "vlc"
+cask "vox"
+
+# ── casks: other ─────────────────────────────────────────────────────────────
+cask "anaconda"
+cask "coconutbattery"
+
+# ── mac app store: personal apps ─────────────────────────────────────────────
+mas "Bear",            id: 1091189122
+mas "Kindle",          id: 302584613
+mas "Logic Pro",       id: 634148309
+mas "MindNode Classic",id: 1289197285
+mas "Night Sky",       id: 475772902
+mas "Scrivener",       id: 1310686187
+mas "Streaks",         id: 963034692
+mas "Xcode",           id: 497799835

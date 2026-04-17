@@ -1,8 +1,0 @@
-{{- $machine := promptChoiceOnce . "machine" "Machine type" (list "work" "personal") -}}
-{{- $name    := promptStringOnce . "name"    "Full name (for git config)" -}}
-{{- $email   := promptStringOnce . "email"   "Email address (for git config)" -}}
-
-[data]
-  machine = {{ $machine | quote }}
-  name    = {{ $name    | quote }}
-  email   = {{ $email   | quote }}

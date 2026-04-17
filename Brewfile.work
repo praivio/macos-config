@@ -1,0 +1,68 @@
+# Brewfile.work — installed on work machines only
+# Managed by macos-config. Run via bootstrap.sh or:
+#   brew bundle --file=Brewfile.work
+
+# ── taps ──────────────────────────────────────────────────────────────────────
+tap "codecrafters-io/tap"
+tap "dart-lang/dart"
+tap "hashicorp/tap"
+
+# ── devops / infra ────────────────────────────────────────────────────────────
+brew "ansible"
+brew "awscli"
+brew "hashicorp/tap/terraform"
+brew "ssh-copy-id"
+brew "sshuttle"                       # VPN-over-SSH
+brew "wrk"                            # HTTP benchmarking
+brew "minio"                          # S3-compatible object storage CLI
+
+# ── languages: python ─────────────────────────────────────────────────────────
+brew "pyenv"
+brew "python@3.12"
+brew "python@3.10"
+brew "pipx"
+
+# ── languages: node ───────────────────────────────────────────────────────────
+brew "node"
+brew "nvm"
+brew "yarn"
+brew "yarn-completion"
+
+# ── languages: go ─────────────────────────────────────────────────────────────
+brew "go"
+
+# ── languages: java / mobile ──────────────────────────────────────────────────
+brew "openjdk"
+brew "gradle"
+brew "maven"
+brew "cocoapods"
+brew "dart-lang/dart/dart"
+
+# ── databases ─────────────────────────────────────────────────────────────────
+brew "postgresql@14"
+brew "postgresql@15"
+
+# ── editors ───────────────────────────────────────────────────────────────────
+brew "emacs"
+
+# ── misc ──────────────────────────────────────────────────────────────────────
+brew "icu4c@76"
+
+# ── casks: IDEs & dev tools ───────────────────────────────────────────────────
+cask "android-studio"
+cask "apache-directory-studio"
+cask "flutter"
+cask "intellij-idea"
+cask "jetbrains-toolbox"
+cask "oracle-jdk"
+cask "rapidapi"
+cask "temurin"
+cask "vagrant"
+
+# ── casks: work-specific apps ────────────────────────────────────────────────
+cask "citrix-workspace"
+cask "favro"
+
+# ── mac app store: work apps ──────────────────────────────────────────────────
+mas "Xcode",               id: 497799835
+mas "Studio",              id: 6742413894

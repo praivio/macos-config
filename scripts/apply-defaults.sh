@@ -1,11 +1,8 @@
-{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-# run_once_after_03-macos-defaults.sh.tmpl
+# scripts/apply-defaults.sh
 #
 # Sets macOS system preferences via `defaults write`.
-# Runs ONCE per machine. To re-run after making changes here:
-#   chezmoi state delete-bucket --bucket=scriptState
-#   chezmoi apply
+# Idempotent — safe to re-run at any time.
 #
 # Reference: https://macos-defaults.com
 set -euo pipefail
@@ -47,7 +44,7 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# Natural scrolling (macOS default; set false to disable)
+# Natural scrolling (set false to disable)
 defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
 
 # ── finder ────────────────────────────────────────────────────────────────────
@@ -144,4 +141,3 @@ for app in "Finder" "Dock" "Safari" "SystemUIServer" "cfprefsd"; do
 done
 
 echo "✔ macOS defaults applied. A full logout/restart is recommended."
-{{ end -}}

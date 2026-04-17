@@ -1,6 +1,0 @@
-# Files chezmoi should not try to deploy to $HOME
-README.md
-bootstrap.sh
-*.md
-.git
-.gitignore

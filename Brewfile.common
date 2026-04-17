@@ -1,0 +1,83 @@
+# Brewfile.common — installed on every machine (work + personal)
+# Managed by macos-config. Run via bootstrap.sh or:
+#   brew bundle --file=Brewfile.common
+
+# ── taps ──────────────────────────────────────────────────────────────────────
+tap "domt4/autoupdate"
+
+# ── core CLI utilities ────────────────────────────────────────────────────────
+brew "coreutils"          # GNU core utils (gls, gdate, etc.)
+brew "moreutils"          # sponge, ts, vidir, etc.
+brew "gnu-sed"            # gsed (consistent sed across macOS)
+brew "openssl@3"
+brew "git"
+brew "wget"
+brew "curl"
+
+# ── shell & terminal ──────────────────────────────────────────────────────────
+brew "antigen"                        # zsh plugin manager
+brew "bash-completion"
+brew "zsh-history-substring-search"
+brew "hstr"                           # shell history browser (Ctrl-R replacement)
+brew "peco"                           # interactive filter / selector
+brew "z"                              # jump to frecent directories
+brew "tmux"
+brew "htop"
+
+# ── search & file tools ───────────────────────────────────────────────────────
+brew "bat"                            # cat with syntax highlighting
+brew "eza"                            # modern ls replacement (exa successor)
+brew "ripgrep"                        # fast grep (rg)
+brew "fzf"                            # fuzzy finder
+brew "tree"
+brew "jq"
+brew "lynx"
+
+# ── documentation ─────────────────────────────────────────────────────────────
+brew "tldr"
+brew "cheat"
+brew "pandoc"
+
+# ── mac app store cli ─────────────────────────────────────────────────────────
+brew "mas"
+
+# ── security ──────────────────────────────────────────────────────────────────
+brew "gnupg"
+brew "1password-cli"                  # op — required for chezmoi 1Password integration
+
+# ── dotfile management ────────────────────────────────────────────────────────
+brew "chezmoi"
+
+# ── misc ──────────────────────────────────────────────────────────────────────
+brew "graphviz"
+brew "autoconf"
+
+# ── casks: core productivity (all machines) ───────────────────────────────────
+cask "1password"
+cask "alfred"
+cask "caffeine"
+cask "firefox"
+cask "ghostty"
+cask "google-chrome"
+cask "google-drive"
+cask "moom"
+cask "karabiner-elements"
+
+# ── casks: communication (all machines) ───────────────────────────────────────
+cask "slack"
+cask "discord"
+cask "whatsapp"
+
+# ── casks: dev tools (all machines) ──────────────────────────────────────────
+cask "claude-code"
+cask "devtoys"
+cask "iterm2"
+cask "insomnia"
+
+# ── mac app store: shared apps ────────────────────────────────────────────────
+# NOTE: You must be signed into the Mac App Store before this runs.
+# If mas fails, sign in manually and re-run: brew bundle --file=Brewfile.common
+mas "1Password for Safari", id: 1569813296
+mas "Calendars",            id: 608834326
+mas "Microsoft To Do",      id: 1274495053
+mas "Spark Desktop",        id: 6445813049

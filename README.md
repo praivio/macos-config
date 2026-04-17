@@ -1,165 +1,122 @@
 # macos-config
 
-Automated macOS setup using [chezmoi](https://www.chezmoi.io/) for dotfile management and Homebrew for package installation. A single command brings a fresh Mac from zero to fully configured.
+macOS system setup: Homebrew packages, macOS defaults, and bootstrap orchestration for a fresh Mac. Dotfile management lives in the companion repo [praivio/macos-dotfiles](https://github.com/praivio/macos-dotfiles).
 
 ---
 
-## What this does
+## How it works
 
-| Layer | Tool | What gets managed |
-|---|---|---|
-| Dotfiles | chezmoi | `.zshrc`, `.gitconfig`, `.gitignore_global` |
-| CLI tools & GUI apps | Homebrew + Brewfile | All packages, casks, taps |
-| Mac App Store apps | `mas` (via Homebrew) | Logic Pro, Xcode, Bear, etc. |
-| System preferences | `defaults write` script | Dock, Finder, keyboard, screenshots |
-| Machine variants | chezmoi templates | Work vs personal package sets |
+| Repo | Handles |
+|---|---|
+| **macos-config** (this repo) | Homebrew packages, macOS defaults, fresh-machine bootstrap |
+| **macos-dotfiles** | Shell config, git config, editor config — managed by chezmoi |
 
-Packages are split into three sets: **common** (all machines), **work-only**, and **personal-only**. You choose your machine type the first time you run `chezmoi init`.
+The two repos are linked via a git submodule: `dotfiles/` in this repo always points to a compatible commit of macos-dotfiles.
+
+Packages are split into three Brewfiles: **common** (all machines), **work**, and **personal**. You choose your profile during bootstrap.
 
 ---
 
-## Prerequisites
+## Fresh machine setup
 
-These steps must be completed manually on a fresh Mac before running the automated setup.
+### Step 1 — Before running any script (manual, ~5 minutes)
 
-### 1. Sign in with your Apple ID
+**1a. Sign in with your Apple ID**
+Open **System Settings → Apple ID**. Required for iCloud and the App Store.
 
-Open **System Settings → Apple ID** and sign in. This is needed for iCloud and for the Mac App Store.
-
-### 2. Sign into the Mac App Store
-
-Open the **App Store** app and sign in. The `mas` tool (which installs App Store apps automatically) requires an active session.
-
-> **Note:** App Store apps can be installed after the fact. If you skip this, the Brewfile script will print a warning and continue — you can re-run `chezmoi apply` later once signed in.
-
-### 3. Enable SSH (optional — needed for cloning via SSH)
-
-If you want to use an SSH URL for the repo (recommended), ensure you have an SSH key and that it is added to your GitHub account. On a brand new machine you can also use HTTPS for the initial clone and switch to SSH afterwards.
-
-To use HTTPS instead of SSH, edit `bootstrap.sh` and change the `CHEZMOI_REPO` line:
+**1b. Generate an SSH key**
 ```bash
-CHEZMOI_REPO="https://github.com/praivio/macos-config.git"
+ssh-keygen -t ed25519 -C "your@email.com"
+```
+
+**1c. Add the SSH key to GitHub**
+```bash
+cat ~/.ssh/id_ed25519.pub   # copy this output
+```
+Then go to [github.com/settings/keys](https://github.com/settings/keys) → New SSH key → paste.
+
+**1d. Add the key to ssh-agent**
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+**1e. Verify GitHub access**
+```bash
+ssh -T git@github.com
+# Expected: "Hi praivio\! You've successfully authenticated..."
 ```
 
 ---
 
-## Installation
-
-### Option A — one-liner (recommended for fresh machines)
+### Step 2 — Run bootstrap
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh | bash
 ```
 
-This script will:
+The script will:
 
-1. Run any pending macOS software updates
-2. Install **Xcode Command Line Tools** (prompts for your password)
-3. Install **Homebrew**
-4. Install **chezmoi** via Homebrew
-5. Run `chezmoi init --apply` which:
-   - Clones this repo to `~/.local/share/chezmoi`
-   - Prompts you for your **machine type** (`work` or `personal`), **full name**, and **email**
-   - Deploys dotfiles to `$HOME`
-   - Runs `brew bundle` to install all packages and apps
-   - Applies macOS system defaults
+1. Confirm SSH access to GitHub (pauses if not set up)
+2. Install **Xcode Command Line Tools**
+3. Install **Rosetta 2** (Apple Silicon only)
+4. Install **Homebrew**
+5. Clone this repo to `~/.local/share/macos-config`
+6. Ask you: **work** or **personal**?
+7. Run `brew bundle` for common + profile-specific packages
+8. Pause for **1Password CLI sign-in** (`op signin`) — needed for chezmoi secrets
+9. Run `chezmoi init --apply` from [praivio/macos-dotfiles](https://github.com/praivio/macos-dotfiles)
+10. Apply macOS system defaults
 
-Total time: 20–40 minutes depending on your internet connection (Xcode and Logic Pro are large).
+Total time: 20–40 minutes (Xcode and large casks take most of the time).
 
 ---
 
-### Option B — manual step by step
+### Step 3 — After bootstrap (manual)
 
-Use this if you prefer to inspect each step or if the one-liner fails partway through.
-
-**Step 1 — Install Xcode Command Line Tools**
-
-```bash
-xcode-select --install
-```
-
-A GUI dialog will appear. Click Install and wait for it to complete (~5 minutes).
-
-**Step 2 — Install Homebrew**
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-After installation, add Homebrew to your PATH (Apple Silicon):
-
-```bash
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-**Step 3 — Install chezmoi**
-
-```bash
-brew install chezmoi
-```
-
-**Step 4 — Initialise chezmoi from this repo**
-
-```bash
-chezmoi init --apply git@github.com:praivio/macos-config.git
-```
-
-You will be prompted for:
-- **Machine type:** `work` or `personal` — controls which packages are installed
-- **Full name:** used in `~/.gitconfig`
-- **Email address:** used in `~/.gitconfig`
-
-These answers are stored in `~/.config/chezmoi/chezmoi.toml` and are never committed to the repo.
+- **Restart your terminal** to pick up the new shell configuration
+- **Sign into the Mac App Store** if not done, then re-run the Brewfiles to get `mas` apps:
+  ```bash
+  brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.common
+  brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.work   # or Brewfile.personal
+  ```
+- **1Password SSH agent**: open 1Password → Settings → Developer → enable SSH agent
+- **Configure secrets** in your dotfiles: see [macos-dotfiles README → Secrets](https://github.com/praivio/macos-dotfiles#secrets)
+- **Restart** your Mac for all defaults to take full effect
 
 ---
 
 ## Day-to-day usage
 
-### Adding a new package
+### Adding or removing packages
 
-1. Edit the Brewfile section in `.chezmoiscripts/run_onchange_02-brew-packages.sh.tmpl`
-2. Commit and push
-3. On each machine: `chezmoi update` — this pulls the latest and re-runs the brew script automatically because its content changed
+Edit the appropriate Brewfile (`Brewfile.common`, `Brewfile.work`, or `Brewfile.personal`), commit, push, then on each machine:
 
 ```bash
-# shortcut (defined in .zshrc)
-czu
+brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.common
+brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.work   # or personal
 ```
 
-### Editing dotfiles
-
+A convenience alias is available after dotfiles are applied:
 ```bash
-chezmoi edit ~/.zshrc        # opens the source file in $EDITOR
-chezmoi diff                 # preview what would change
-chezmoi apply                # apply changes to $HOME
-```
-
-Or edit the source directory directly:
-
-```bash
-chezmoi cd                   # opens a shell in ~/.local/share/chezmoi
-# edit files, then:
-chezmoi apply
-```
-
-### Keeping packages up to date
-
-```bash
-# Update Homebrew and all installed packages
-bup
-
-# Pull latest dotfiles/scripts from GitHub and apply
-czu
+brewup   # updates Homebrew + runs bundle for your profile
 ```
 
 ### Re-running macOS defaults
 
-The defaults script runs only once per machine. To force it to run again (e.g. after editing it):
-
 ```bash
-chezmoi state delete-bucket --bucket=scriptState
-chezmoi apply
+bash ~/.local/share/macos-config/scripts/apply-defaults.sh
+```
+
+### Updating the dotfiles submodule
+
+When macos-dotfiles has new commits you want to pin to:
+```bash
+cd ~/.local/share/macos-config
+git submodule update --remote dotfiles
+git add dotfiles
+git commit -m "chore: bump dotfiles submodule"
+git push
 ```
 
 ---
@@ -168,132 +125,39 @@ chezmoi apply
 
 ```
 macos-config/
-├── README.md                              ← you are here
-├── bootstrap.sh                           ← entry point for fresh machines
-├── .chezmoi.toml.tmpl                     ← prompts for machine type, name, email
-├── .chezmoiignore                         ← files chezmoi won't deploy to $HOME
-│
-├── .chezmoiscripts/
-│   ├── run_once_before_01-install-homebrew.sh.tmpl   ← safety net: ensures brew is present
-│   ├── run_onchange_02-brew-packages.sh.tmpl          ← all packages; re-runs on any change
-│   └── run_once_after_03-macos-defaults.sh.tmpl       ← system preferences (runs once)
-│
-└── home/
-    ├── dot_zshrc.tmpl                     ← ~/.zshrc (templated for work/personal)
-    ├── dot_gitconfig.tmpl                 ← ~/.gitconfig (name/email from template vars)
-    ├── dot_gitignore_global               ← ~/.gitignore_global
-    └── README-post-install.md.tmpl        ← ~/README-post-install.md (manual checklist)
+├── README.md
+├── bootstrap.sh                  ← entry point for fresh machines
+├── Brewfile.common               ← packages for all machines
+├── Brewfile.work                 ← work-only packages
+├── Brewfile.personal             ← personal-only packages
+├── scripts/
+│   └── apply-defaults.sh         ← macOS system preferences
+└── dotfiles/                     ← git submodule → praivio/macos-dotfiles
 ```
-
-### Script naming conventions
-
-chezmoi uses filename prefixes to control when scripts run:
-
-| Prefix | Behaviour |
-|---|---|
-| `run_once_before_` | Runs once, before dotfiles are deployed |
-| `run_onchange_` | Runs whenever the file's content changes |
-| `run_once_after_` | Runs once, after dotfiles are deployed |
-
-Numbers in the filenames (`01-`, `02-`, `03-`) control execution order within each group.
 
 ---
 
 ## Machine profiles
 
-When you run `chezmoi init`, you choose `work` or `personal`. This controls:
-
-| | Work | Personal |
-|---|---|---|
-| `citrix-workspace` | ✓ | — |
-| `intellij-idea` | ✓ | — |
-| `android-studio` | ✓ | — |
-| `flutter`, `dart` | ✓ | — |
-| `vagrant` | ✓ | — |
-| `oracle-jdk`, `temurin` | ✓ | — |
-| `postgresql@14` | ✓ | — |
-| `sshuttle`, `wrk` | ✓ | — |
-| `anaconda` | — | ✓ |
-| Work git config include | ✓ | — |
-
-To add a new work-only or personal-only package, find the appropriate `{{ if eq .machine "work" }}` block in `run_onchange_02-brew-packages.sh.tmpl` and add it there.
-
----
-
-## Adding a new dotfile to chezmoi tracking
-
-```bash
-# Add an existing file to chezmoi source control
-chezmoi add ~/.ssh/config
-
-# Add and immediately make it a template (for machine-specific content)
-chezmoi add --template ~/.ssh/config
-
-# Check the result
-chezmoi diff
-chezmoi apply
-```
-
----
-
-## Secrets and sensitive files
-
-**Do not commit secrets to this repo.** The recommended approach:
-
-- Store secrets in **1Password** and use the [chezmoi 1Password integration](https://www.chezmoi.io/user-guide/password-managers/1password/) to inject them into templates at apply time
-- Store machine-specific secrets in `~/.zshrc.local` (this file is sourced by `.zshrc` but is not tracked by chezmoi)
-
-Example of injecting a secret from 1Password into a dotfile template:
-
-```
-export GITHUB_TOKEN="{{ onepasswordRead "op://Private/GitHub token/credential" }}"
-```
-
----
-
-## Troubleshooting
-
-**`mas` fails with "Not signed in"**
-Open the Mac App Store app, sign in, then re-run `chezmoi apply`. The brew script will skip already-installed packages.
-
-**Homebrew not found after bootstrap**
-Restart your terminal session, or run:
-```bash
-eval "$(/opt/homebrew/bin/brew shellenv)"    # Apple Silicon
-# or
-eval "$(/usr/local/bin/brew shellenv)"       # Intel
-```
-
-**A cask fails with "App already exists in /Applications"**
-You may have manually installed an app that Homebrew now wants to manage. Either delete the existing app and re-run, or add `--adopt` to the relevant cask line.
-
-**chezmoi apply fails on a template error**
-Check your `~/.config/chezmoi/chezmoi.toml` — it should contain `machine`, `name`, and `email` keys. If it is missing or malformed, delete it and re-run `chezmoi init`.
-
-**Re-running everything from scratch**
-```bash
-chezmoi state delete-bucket --bucket=scriptState
-chezmoi apply
-```
-
----
-
-## Updating this repo from an existing machine
-
-If you have made manual changes to your dotfiles and want to pull them back into the repo:
-
-```bash
-chezmoi re-add ~/.zshrc     # re-imports the live file into chezmoi source
-chezmoi diff                # sanity check
-chezmoi cd && git add -A && git commit -m "update zshrc" && git push
-```
+| Package / App | work | personal |
+|---|:---:|:---:|
+| ansible, awscli, terraform | ✓ | — |
+| cocoapods, dart, flutter | ✓ | — |
+| android-studio, intellij-idea | ✓ | — |
+| citrix-workspace, vagrant | ✓ | — |
+| postgresql@14, postgresql@15 | ✓ | — |
+| sshuttle, wrk | ✓ | — |
+| anaconda | — | ✓ |
+| calibre, gimp, musescore, vlc | — | ✓ |
+| exercism, codecrafters | — | ✓ |
+| Logic Pro (mas) | — | ✓ |
+| Xcode (mas) | ✓ | ✓ |
 
 ---
 
 ## References
 
-- [chezmoi documentation](https://www.chezmoi.io/user-guide/)
-- [chezmoi macOS guide](https://www.chezmoi.io/user-guide/machines/macos/)
 - [Homebrew Bundle](https://github.com/Homebrew/homebrew-bundle)
 - [mas-cli](https://github.com/mas-cli/mas)
 - [macOS defaults reference](https://macos-defaults.com)
+- [praivio/macos-dotfiles](https://github.com/praivio/macos-dotfiles)
