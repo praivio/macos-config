@@ -44,7 +44,7 @@ echo ""
 
 # ── preflight: SSH key check ──────────────────────────────────────────────────
 info "Checking SSH access to GitHub..."
-_SSH_OUT=$(ssh -T git@github.com 2>&1 || true)
+set +e; _SSH_OUT=$(ssh -T git@github.com </dev/null 2>&1); set -e
 if ! grep -q "successfully authenticated" <<< "$_SSH_OUT"; then
   echo ""
   warn "SSH to GitHub failed. Please ensure you have:"
@@ -53,8 +53,8 @@ if ! grep -q "successfully authenticated" <<< "$_SSH_OUT"; then
   echo "  3. Added it to ssh-agent: ssh-add ~/.ssh/id_ed25519"
   echo ""
   ask "Press Enter once your SSH key is set up, or Ctrl-C to abort..."
-  read -r
-  _SSH_OUT=$(ssh -T git@github.com 2>&1 || true)
+  read -r </dev/tty
+  set +e; _SSH_OUT=$(ssh -T git@github.com </dev/null 2>&1); set -e
   grep -q "successfully authenticated" <<< "$_SSH_OUT" \
     || die "Still can't reach GitHub via SSH. Aborting."
 fi
