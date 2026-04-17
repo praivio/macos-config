@@ -52,8 +52,11 @@ ssh -T git@github.com
 ### Step 2 — Run bootstrap
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh -o /tmp/bootstrap.sh
+bash /tmp/bootstrap.sh
 ```
+
+> **Note:** Do not pipe directly with `curl … | bash` — the script needs an interactive terminal for sudo, SSH checks, and profile prompts.
 
 The script will:
 
