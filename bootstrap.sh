@@ -134,11 +134,11 @@ success "Profile: ${PROFILE}"
 
 # ── 6. Install Homebrew packages ──────────────────────────────────────────────
 info "Installing common packages (this may take 20–40 minutes)..."
-brew bundle --no-lock --file="${MACOS_CONFIG_DIR}/Brewfile.common"
+brew bundle --file="${MACOS_CONFIG_DIR}/Brewfile.common"
 success "Common packages installed."
 
 info "Installing ${PROFILE}-specific packages..."
-brew bundle --no-lock --file="${MACOS_CONFIG_DIR}/Brewfile.${PROFILE}"
+brew bundle --file="${MACOS_CONFIG_DIR}/Brewfile.${PROFILE}"
 success "${PROFILE} packages installed."
 
 # ── 7. 1Password CLI sign-in ──────────────────────────────────────────────────
@@ -177,8 +177,8 @@ echo ""
 echo "  Remaining manual steps:"
 echo "  1. Restart your terminal (or open a new shell session)."
 echo "  2. Sign into the Mac App Store if not done, then re-run:"
-echo "       brew bundle --no-lock --file=${MACOS_CONFIG_DIR}/Brewfile.common"
-echo "       brew bundle --no-lock --file=${MACOS_CONFIG_DIR}/Brewfile.${PROFILE}"
+echo "       brew bundle --file=${MACOS_CONFIG_DIR}/Brewfile.common"
+echo "       brew bundle --file=${MACOS_CONFIG_DIR}/Brewfile.${PROFILE}"
 echo "  3. Open 1Password → Settings → Developer → enable SSH agent integration."
 echo "  4. Configure 1Password secrets in your dotfiles — see:"
 echo "       https://github.com/praivio/macos-dotfiles#secrets"

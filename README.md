@@ -80,8 +80,8 @@ Total time: 20–40 minutes (Xcode and large casks take most of the time).
 - **Restart your terminal** to pick up the new shell configuration
 - **Sign into the Mac App Store** if not done, then re-run the Brewfiles to get `mas` apps:
   ```bash
-  brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.common
-  brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.work   # or Brewfile.personal
+  brew bundle --file=~/.local/share/macos-config/Brewfile.common
+  brew bundle --file=~/.local/share/macos-config/Brewfile.work   # or Brewfile.personal
   ```
 - **1Password SSH agent**: open 1Password → Settings → Developer → enable SSH agent
 - **Configure secrets** in your dotfiles: see [macos-dotfiles README → Secrets](https://github.com/praivio/macos-dotfiles#secrets)
@@ -96,8 +96,8 @@ Total time: 20–40 minutes (Xcode and large casks take most of the time).
 Edit the appropriate Brewfile (`Brewfile.common`, `Brewfile.work`, or `Brewfile.personal`), commit, push, then on each machine:
 
 ```bash
-brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.common
-brew bundle --no-lock --file=~/.local/share/macos-config/Brewfile.work   # or personal
+brew bundle --file=~/.local/share/macos-config/Brewfile.common
+brew bundle --file=~/.local/share/macos-config/Brewfile.work   # or personal
 ```
 
 A convenience alias is available after dotfiles are applied:
