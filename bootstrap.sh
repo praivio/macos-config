@@ -3,7 +3,10 @@
 # bootstrap.sh — macOS setup entry point
 #
 # Usage on a fresh machine:
-#   curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh -o /tmp/bootstrap.sh
+#   bash /tmp/bootstrap.sh
+#
+#   (Do NOT pipe directly: curl ... | bash — sudo and interactive prompts need a TTY)
 #
 # Or clone first and run locally:
 #   bash ~/.local/share/macos-config/bootstrap.sh
@@ -14,6 +17,15 @@
 #   3. Sign in to the Mac App Store
 # =============================================================================
 set -euo pipefail
+
+# ── stdin guard ───────────────────────────────────────────────────────────────
+if [[ ! -t 0 ]]; then
+  echo "✖ This script must be run with a TTY (stdin must be a terminal)." >&2
+  echo "  Don't pipe it from curl. Instead:" >&2
+  echo "    curl -fsSL https://raw.githubusercontent.com/praivio/macos-config/main/bootstrap.sh -o /tmp/bootstrap.sh" >&2
+  echo "    bash /tmp/bootstrap.sh" >&2
+  exit 1
+fi
 
 MACOS_CONFIG_REPO="git@github.com:praivio/macos-config.git"
 DOTFILES_REPO="git@github.com:praivio/macos-dotfiles.git"
