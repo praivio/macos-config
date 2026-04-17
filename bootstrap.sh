@@ -44,8 +44,8 @@ echo ""
 
 # ── preflight: SSH key check ──────────────────────────────────────────────────
 info "Checking SSH access to GitHub..."
-_ssh_check() { ssh -T git@github.com 2>&1 || true; }
-if ! _ssh_check | grep -q "successfully authenticated"; then
+_SSH_OUT=$(ssh -T git@github.com 2>&1 || true)
+if ! grep -q "successfully authenticated" <<< "$_SSH_OUT"; then
   echo ""
   warn "SSH to GitHub failed. Please ensure you have:"
   echo "  1. Generated an SSH key:  ssh-keygen -t ed25519 -C \"your@email.com\""
@@ -54,7 +54,8 @@ if ! _ssh_check | grep -q "successfully authenticated"; then
   echo ""
   ask "Press Enter once your SSH key is set up, or Ctrl-C to abort..."
   read -r
-  _ssh_check | grep -q "successfully authenticated" \
+  _SSH_OUT=$(ssh -T git@github.com 2>&1 || true)
+  grep -q "successfully authenticated" <<< "$_SSH_OUT" \
     || die "Still can't reach GitHub via SSH. Aborting."
 fi
 success "SSH access to GitHub confirmed."
