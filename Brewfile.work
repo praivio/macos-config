@@ -65,4 +65,3 @@ cask "favro"
 
 # ── mac app store: work apps ──────────────────────────────────────────────────
 mas "Xcode",               id: 497799835
-mas "Studio",              id: 6742413894

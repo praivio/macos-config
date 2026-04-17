@@ -43,7 +43,7 @@ brew "mas"
 
 # ── security ──────────────────────────────────────────────────────────────────
 brew "gnupg"
-brew "1password-cli"                  # op — required for chezmoi 1Password integration
+# brew "1password-cli"                  # op — required for chezmoi 1Password integration
 
 # ── dotfile management ────────────────────────────────────────────────────────
 brew "chezmoi"
