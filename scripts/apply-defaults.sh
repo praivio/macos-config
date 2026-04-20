@@ -106,14 +106,14 @@ defaults write com.apple.screencapture type -string "png"
 # Disable shadow in screenshots
 defaults write com.apple.screencapture disable-shadow -bool true
 
-# ── safari ────────────────────────────────────────────────────────────────────
-
-# Show the full URL in the address bar
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
-
-# Enable developer menu and web inspector
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+# # ── safari ────────────────────────────────────────────────────────────────────
+# 
+# # Show the full URL in the address bar
+# defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
+# 
+# # Enable developer menu and web inspector
+# defaults write com.apple.Safari IncludeDevelopMenu -bool true
+# defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
 
 # ── text edit ─────────────────────────────────────────────────────────────────
 
