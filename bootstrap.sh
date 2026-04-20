@@ -124,11 +124,17 @@ fi
 
 # ── 5. Choose machine profile ─────────────────────────────────────────────────
 echo ""
-ask "Machine profile — enter 'work' or 'personal':"
-read -r PROFILE
-while [[ "${PROFILE}" != "work" && "${PROFILE}" != "personal" ]]; do
-  ask "Please enter exactly 'work' or 'personal':"
-  read -r PROFILE
+ask "Machine profile — [w]ork or [p]ersonal:"
+read -r _PROFILE_INPUT </dev/tty
+while true; do
+  case "$_PROFILE_INPUT" in
+    w|W|work)     PROFILE="work";     break ;;
+    p|P|personal) PROFILE="personal"; break ;;
+    *)
+      ask "Please enter 'w' (work) or 'p' (personal):"
+      read -r _PROFILE_INPUT </dev/tty
+      ;;
+  esac
 done
 success "Profile: ${PROFILE}"
 

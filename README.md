@@ -145,16 +145,19 @@ macos-config/
 | Package / App | work | personal |
 |---|:---:|:---:|
 | ansible, awscli, terraform | ✓ | — |
-| cocoapods, dart, flutter | ✓ | — |
-| android-studio, intellij-idea | ✓ | — |
-| citrix-workspace, vagrant | ✓ | — |
+| minio, ssh-copy-id, sshuttle, wrk | ✓ | — |
 | postgresql@14, postgresql@15 | ✓ | — |
-| sshuttle, wrk | ✓ | — |
-| anaconda | — | ✓ |
-| calibre, gimp, musescore, vlc | — | ✓ |
+| cocoapods, dart | ✓ | — |
+| android-studio, flutter, intellij-idea, jetbrains-toolbox | ✓ | — |
+| apache-directory-studio, oracle-jdk, temurin, rapidapi, vagrant | ✓ | — |
+| citrix-workspace, favro | ✓ | — |
 | exercism, codecrafters | — | ✓ |
-| Logic Pro (mas) | — | ✓ |
+| calibre, drawio, gimp, imageoptim, musescore, vlc, vox | — | ✓ |
+| anaconda, coconutbattery | — | ✓ |
+| pyenv, python, node, nvm, go, openjdk, gradle, maven, emacs | ✓ | ✓ |
 | Xcode (mas) | ✓ | ✓ |
+| Studio (mas) | ✓ | — |
+| Bear, Kindle, Logic Pro, MindNode Classic, Night Sky, Scrivener, Streaks (mas) | — | ✓ |
 
 ---
 
