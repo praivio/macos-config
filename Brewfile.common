@@ -70,6 +70,7 @@ cask "whatsapp"
 
 # ── casks: dev tools (all machines) ──────────────────────────────────────────
 cask "claude-code"
+cask "cursor"
 cask "devtoys"
 cask "iterm2"
 cask "insomnia"
