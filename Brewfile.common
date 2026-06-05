@@ -23,6 +23,7 @@ brew "peco"                           # interactive filter / selector
 brew "z"                              # jump to frecent directories
 brew "tmux"
 brew "htop"
+brew "starship"
 
 # ── search & file tools ───────────────────────────────────────────────────────
 brew "bat"                            # cat with syntax highlighting
@@ -62,6 +63,7 @@ cask "google-chrome"
 cask "google-drive"
 cask "moom"
 cask "karabiner-elements"
+cask "font-jetbrains-mono-nerd-font"
 
 # ── casks: communication (all machines) ───────────────────────────────────────
 cask "slack"
